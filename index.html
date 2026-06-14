@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zotion - Workspace Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #191919; color: #f1f1f1; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Chuyển đổi Layout Full Width mượt mà */
+        #editor-container {
+            width: 100%;
+            transition: max-width 0.25s ease-in-out, padding 0.25s ease-in-out;
+            will-change: max-width, padding;
+        }
+        #editor-container[data-layout="normal"] {
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 4rem;
+            padding-right: 4rem;
+        }
+        #editor-container[data-layout="full"] {
+            max-width: 100% !important;
+            padding-left: 2.5rem !important;
+            padding-right: 2.5rem !important;
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden relative">
+
+    <div id="landing-page" class="h-full flex flex-col items-center justify-center text-center px-4">
+        <nav class="fixed top-0 w-full flex justify-between items-center p-6 max-w-7xl mx-auto">
+            <div class="flex items-center space-x-2 font-bold text-xl">
+                <img src="./img/logo-dark.png" class="w-8 h-8 object-contain" alt="Zotion Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="w-8 h-8 bg-white text-black rounded hidden items-center justify-center font-black">Z</div>
+                <span>Zotion</span>
+            </div>
+            <div class="space-x-4 text-sm font-medium">
+                <button onclick="window.openAuth('login')" class="hover:text-gray-400">Log In</button>
+                <button onclick="window.openAuth('signup')" class="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200 transition">Get Zotion free</button>
+            </div>
+        </nav>
+        <h1 class="text-6xl font-bold max-w-4xl leading-tight mb-4">Your Ideas 💡, Documents 📕, & Plans 🚀. Welcome to <span class="underline underline-offset-8">Zotion</span></h1>
+        <p class="text-xl text-gray-400 mb-8 max-w-xl">Zotion is the connected workspace where better, faster work happens.</p>
+        <button onclick="window.openAuth('signup')" class="bg-white text-black px-6 py-3 rounded-md font-bold flex items-center space-x-2 hover:bg-gray-200 transition mx-auto mb-12">
+            <span>Get Zotion free</span> <i class="fa-solid fa-arrow-right text-sm ml-1"></i>
+        </button>
+        
+        <div class="flex flex-row items-center justify-center space-x-6 opacity-60 max-w-5xl w-full px-6">
+            <img src="./img/idea-dark.png" class="w-1/2 max-h-72 object-contain" alt="Idea Dark">
+            <img src="./img/idea-team.png" class="w-1/2 max-h-72 object-contain" alt="Idea Team">
+        </div>
+    </div>
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div class="bg-[#202020] border border-[#2c2c2c] w-full max-w-md p-8 rounded-xl shadow-2xl relative">
+            <button onclick="window.closeAuth()" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center mb-8">
+                <h2 id="auth-title" class="text-2xl font-bold">Sign in to Zotion</h2>
+                <p id="auth-desc" class="text-sm text-gray-400 mt-2 italic">Welcome back! Please sign in to continue.</p>
+            </div>
+            <form id="auth-form" class="space-y-4">
+                <input id="auth-email" type="email" placeholder="Email address" class="w-full p-2.5 bg-[#191919] border border-[#2c2c2c] rounded-md outline-none focus:border-white/50" required>
+                <input id="auth-password" type="password" placeholder="Password" class="w-full p-2.5 bg-[#191919] border border-[#2c2c2c] rounded-md outline-none focus:border-white/50" required>
+                <button type="submit" class="w-full bg-white text-black p-2.5 rounded-md font-bold hover:bg-gray-200 transition flex items-center justify-center space-x-1">Continue <i class="fa-solid fa-chevron-right text-xs"></i></button>
+            </form>
+            <div class="mt-6 text-center text-sm text-gray-500">
+                <span id="auth-toggle-msg">Don't have an account?</span>
+                <button id="auth-toggle-btn" class="text-white font-bold hover:underline ml-1">Sign up</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="search-modal" class="fixed inset-0 z-[90] hidden items-start justify-center bg-black/50 backdrop-blur-sm pt-[10vh] p-4" onclick="window.closeSearch()">
+        <div class="bg-[#202020] border border-[#2c2c2c] w-full max-w-xl rounded-lg shadow-2xl flex flex-col overflow-hidden" onclick="event.stopPropagation()">
+            <div class="flex items-center space-x-3 p-3 border-b border-[#2c2c2c]">
+                <i class="fa-solid fa-magnifying-glass text-gray-500 text-sm"></i>
+                <input id="search-input" type="text" placeholder="Search Zotion..." class="w-full bg-transparent outline-none text-sm text-white placeholder-gray-500">
+                <button onclick="window.closeSearch()" class="text-[10px] bg-[#2c2c2c] px-1.5 py-0.5 rounded text-gray-400 hover:text-white">ESC</button>
+            </div>
+            <div id="search-results" class="max-h-[300px] overflow-y-auto p-2 space-y-[2px] no-scrollbar"></div>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden h-screen w-screen flex overflow-hidden opacity-0 transition-opacity duration-500 text-[#f1f1f1] bg-[#191919]">
+        
+        <aside class="w-60 bg-[#202020] h-full flex flex-col border-r border-[#2c2c2c] select-none text-sm text-gray-400 shrink-0 relative">
+            <div class="p-3 flex items-center justify-between hover:bg-[#2f2f2f] cursor-pointer group transition-colors">
+                <div class="flex items-center space-x-2 truncate font-semibold text-white">
+                    <div class="w-5 h-5 bg-[#37352f] text-white rounded flex items-center justify-center text-[10px] font-bold border border-gray-600">Z</div>
+                    <span id="user-display" class="truncate text-xs">Zotion</span>
+                </div>
+                <button onclick="window.logout()" class="opacity-0 group-hover:opacity-100 p-1 hover:bg-[#3f3f3f] rounded transition text-red-400"><i class="fa-solid fa-right-from-bracket text-xs"></i></button>
+            </div>
+
+            <div class="px-2 py-1 space-y-[2px]">
+                <div class="flex items-center space-x-3 p-1.5 hover:bg-[#2f2f2f] rounded cursor-pointer transition text-white font-medium">
+                    <i class="fa-solid fa-house text-sm w-4 text-center opacity-80"></i> <span>Home</span>
+                </div>
+                <div onclick="window.openSearch()" class="flex items-center space-x-3 p-1.5 hover:bg-[#2f2f2f] rounded cursor-pointer transition">
+                    <i class="fa-solid fa-magnifying-glass text-sm w-4 text-center opacity-60"></i> <span>Search</span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-2 py-3 space-y-4 no-scrollbar">
+                <div>
+                    <div class="px-2 text-[11px] font-bold text-yellow-500 uppercase tracking-wider mb-1 flex items-center space-x-1">
+                        <i class="fa-solid fa-star text-[9px]"></i> <span>Favorites</span>
+                    </div>
+                    <nav id="sidebar-favorites" class="space-y-[2px] mb-4"></nav>
+                </div>
+                <div>
+                    <div class="px-2 text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 flex justify-between items-center group">
+                        <span>Private</span>
+                        <button onclick="window.createNewPage()" class="opacity-0 group-hover:opacity-100 hover:text-white transition"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <nav id="sidebar-pages" class="space-y-[2px]"></nav>
+                </div>
+            </div>
+
+            <div class="p-2 border-t border-[#2c2c2c] space-y-1">
+                <button onclick="window.createNewPage()" class="w-full flex items-center space-x-2 p-1.5 hover:bg-[#2f2f2f] rounded transition text-left text-white font-medium">
+                    <i class="fa-solid fa-plus text-xs w-4 text-center"></i> <span>New page</span>
+                </button>
+                <button onclick="window.toggleTrash(event)" class="w-full flex items-center justify-between p-1.5 hover:bg-[#2f2f2f] rounded transition text-left group">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-trash-can text-xs w-4 text-center"></i> <span>Trash</span>
+                    </div>
+                    <span id="trash-count" class="bg-[#2c2c2c] text-[10px] px-1.5 py-0.5 rounded text-gray-400 group-hover:text-white">0</span>
+                </button>
+            </div>
+        </aside>
+
+        <div id="trash-menu" class="hidden absolute left-60 bottom-4 w-72 bg-[#202020] border border-[#2c2c2c] rounded-lg shadow-2xl p-2 z-[60] text-xs text-gray-300 flex flex-col max-h-64 overflow-hidden">
+            <p class="font-bold text-gray-500 px-2 py-1 uppercase tracking-wider text-[10px]">Trash Can</p>
+            <div id="trash-list" class="flex-1 overflow-y-auto space-y-[2px] mt-1 no-scrollbar"></div>
+        </div>
+
+        <main class="flex-1 flex flex-col h-full bg-[#191919] relative overflow-hidden">
+            <header class="h-11 border-b border-[#2c2c2c] flex items-center justify-between px-4 text-xs select-none shrink-0 bg-[#191919]">
+                <div class="flex items-center space-x-2 text-gray-400">
+                    <span id="breadcrumb-title" class="text-white font-medium truncate">Untitled</span>
+                    <span class="text-gray-600">/</span>
+                    <div class="flex items-center space-x-1 hover:bg-[#2c2c2c] px-1.5 py-0.5 rounded cursor-pointer text-gray-300">
+                        <i class="fa-solid fa-lock text-[10px]"></i> <span>Private</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2.5 text-gray-400">
+                    <span id="page-edited-time" class="text-[11px] opacity-40 italic">Edited just now</span>
+                    
+                    <button onclick="window.toggleMenu(event, 'share-menu')" class="flex items-center space-x-1 border border-[#2c2c2c] hover:bg-[#2c2c2c] px-2 py-1 rounded text-white font-medium transition text-[11px]">
+                        <i class="fa-solid fa-lock text-[10px]"></i> <span>Share</span>
+                    </button>
+                    
+                    <div id="dynamic-fav-zone" class="flex items-center">
+                        <i id="main-star-icon" class="fa-regular fa-star hover:text-white cursor-pointer transition p-1 rounded hover:bg-[#2c2c2c] text-gray-400"></i>
+                    </div>
+                    
+                    <i onclick="window.toggleMenu(event, 'more-menu')" class="fa-solid fa-ellipsis hover:text-white cursor-pointer transition p-1 px-2 rounded hover:bg-[#2c2c2c]"></i>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto py-6 no-scrollbar relative flex flex-col">
+                <div id="editor-container" data-layout="normal">
+                    
+                    <div class="w-full flex items-center space-x-3 text-[11px] text-gray-500 select-none pb-6">
+                        <span class="flex items-center space-x-1">
+                            <i class="fa-solid fa-layer-group text-[10px]"></i> <span>Mức độ công việc:</span>
+                        </span>
+                        <select id="page-priority" class="bg-[#202020] border border-[#2c2c2c] rounded px-2 py-0.5 text-gray-300 outline-none cursor-pointer hover:bg-[#2f2f2f]">
+                            <option value="high">🔴 Ô 1: Khẩn cấp & Quan trọng (Làm ngay)</option>
+                            <option value="medium">🟡 Ô 2: Không khẩn cấp & Quan trọng (Lên lịch)</option>
+                            <option value="low">🔵 Ô 3: Khẩn cấp & Không quan trọng (Ủy quyền)</option>
+                            <option value="trash">⚪ Ô 4: Không khẩn cấp & Không quan trọng (Xóa bỏ)</option>
+                        </select>
+                    </div>
+
+                    <input id="page-title" type="text" placeholder="Untitled" class="w-full bg-transparent text-4xl font-bold outline-none placeholder-white/10 text-white tracking-tight p-0 border-none focus:ring-0 mb-4">
+                    
+                    <div class="relative w-full">
+                        <textarea id="page-content" placeholder="Nhấn '/' để dùng lệnh..." class="w-full h-[70vh] bg-transparent outline-none resize-none leading-relaxed text-base text-gray-300 placeholder-white/5 p-0 border-none focus:ring-0 font-normal"></textarea>
+
+                        <div id="slash-menu" class="hidden absolute left-0 top-6 w-72 bg-[#202020] border border-[#2c2c2c] rounded-lg shadow-2xl p-1 z-[70] text-xs text-gray-300 flex flex-col max-h-72 overflow-hidden select-none">
+                            <div class="px-3 py-1.5 text-[10px] font-bold text-gray-500 uppercase tracking-wider border-b border-[#2c2c2c] mb-1">Thành phần nội dung cơ bản</div>
+                            <div class="overflow-y-auto space-y-[2px] no-scrollbar max-h-56 p-1">
+                                <button onclick="window.executeSlashCommand('h2')" class="w-full flex items-center justify-between p-2 hover:bg-[#2f2f2f] hover:text-white rounded text-left group transition-colors">
+                                    <div class="flex items-center space-x-3"><span class="font-bold text-xs text-gray-400 group-hover:text-white w-5 text-center">H2</span><span>Heading 2</span></div>
+                                    <span class="text-gray-600 text-[10px]">##</span>
+                                </button>
+                                <button onclick="window.executeSlashCommand('h3')" class="w-full flex items-center justify-between p-2 hover:bg-[#2f2f2f] hover:text-white rounded text-left group transition-colors">
+                                    <div class="flex items-center space-x-3"><span class="font-bold text-xs text-gray-400 group-hover:text-white w-5 text-center">H3</span><span>Heading 3</span></div>
+                                    <span class="text-gray-600 text-[10px]">###</span>
+                                </button>
+                                <button onclick="window.executeSlashCommand('h4')" class="w-full flex items-center justify-between p-2 hover:bg-[#2f2f2f] hover:text-white rounded text-left group transition-colors">
+                                    <div class="flex items-center space-x-3"><span class="font-bold text-xs text-gray-400 group-hover:text-white w-5 text-center">H4</span><span>Heading 4</span></div>
+                                    <span class="text-gray-600 text-[10px]">####</span>
+                                </button>
+                                <button onclick="window.executeSlashCommand('bullet')" class="w-full flex items-center justify-between p-2 hover:bg-[#2f2f2f] hover:text-white rounded text-left group transition-colors">
+                                    <div class="flex items-center space-x-3"><i class="fa-solid fa-list-ul text-gray-500 group-hover:text-white w-5 text-center"></i><span>Bulleted list</span></div>
+                                    <span class="text-gray-600 text-[10px]">-</span>
+                                </button>
+                                <button onclick="window.executeSlashCommand('number')" class="w-full flex items-center justify-between p-2 hover:bg-[#2f2f2f] hover:text-white rounded text-left group transition-colors">
+                                    <div class="flex items-center space-x-3"><i class="fa-solid fa-list-ol text-gray-500 group-hover:text-white w-5 text-center"></i><span>Numbered list</span></div>
+                                    <span class="text-gray-600 text-[10px]">1.</span>
+                                </button>
+                                <button onclick="window.executeSlashCommand('todo')" class="w-full flex items-center justify-between p-2 hover:bg-[#2f2f2f] hover:text-white rounded text-left group transition-colors">
+                                    <div class="flex items-center space-x-3"><i class="fa-regular fa-square-check text-gray-500 group-hover:text-white w-5 text-center"></i><span>To-do list</span></div>
+                                    <span class="text-gray-600 text-[10px]">[]</span>
+                                </button>
+                                <button onclick="window.executeSlashCommand('toggle')" class="w-full flex items-center justify-between p-2 hover:bg-[#2f2f2f] hover:text-white rounded text-left group transition-colors">
+                                    <div class="flex items-center space-x-3"><i class="fa-solid fa-caret-right text-gray-500 group-hover:text-white w-5 text-center"></i><span>Toggle list</span></div>
+                                    <span class="text-gray-600 text-[10px]">&gt;</span>
+                                </button>
+                            </div>
+                            <div class="border-t border-[#2c2c2c] p-1.5 mt-1 flex justify-between items-center text-[10px] text-gray-500 px-2">
+                                <span>Đóng menu</span><span class="bg-[#2c2c2c] px-1 py-0.5 rounded">esc</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="share-menu" class="hidden absolute right-16 top-12 w-80 bg-[#202020] border border-[#2c2c2c] rounded-lg shadow-2xl p-4 z-50 text-xs text-gray-300 space-y-3" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between border-b border-[#2c2c2c] pb-2">
+                    <span class="font-bold text-white flex items-center space-x-1">
+                        <i class="fa-solid fa-earth-americas text-gray-400"></i> <span>Chia sẻ công khai</span>
+                    </span>
+                    <input type="checkbox" id="share-public-toggle" onchange="window.togglePublicShare()" class="w-4 h-4 cursor-pointer accent-blue-500">
+                </div>
+                
+                <div id="share-public-settings" class="space-y-3 hidden">
+                    <div class="flex items-center justify-between bg-[#191919] p-2 rounded border border-[#2c2c2c]">
+                        <span class="text-gray-400 text-[11px]">Quyền hạn khách:</span>
+                        <select id="share-access-role" onchange="window.updateShareRole()" class="bg-[#2a2a2a] border border-[#3a3a3a] rounded px-1.5 py-0.5 text-white outline-none cursor-pointer">
+                            <option value="viewer">👀 Chỉ xem (Read-only)</option>
+                            <option value="editor">✍️ Có thể sửa (Public Edit)</option>
+                        </select>
+                    </div>
+                    <button onclick="window.copyPublicLink()" class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded font-medium text-white transition flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-link text-[10px]"></i> <span>Copy Link Công Khai</span>
+                    </button>
+
+                    <div class="mt-3 pt-3 border-t border-[#2f2f2f] space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-[11px] font-semibold text-gray-300">Quyền thả sao bài viết</span>
+                                <span class="text-[9px] text-gray-500">Cho phép người xem link bấm thích bài viết này</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="allow-fav-toggle" onchange="window.toggleAllowFavourites()" class="sr-only peer">
+                                <div class="w-7 h-4 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-yellow-500"></div>
+                            </label>
+                        </div>
+
+                        <div id="owner-only-stalker-zone" class="mt-3 hidden">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block mb-1">Danh sách người thích bài của m:</span>
+                            <div id="owner-fav-stalker-list" class="max-h-[80px] overflow-y-auto no-scrollbar flex flex-col space-y-1">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <p id="share-private-msg" class="text-gray-500 italic text-center py-2">Trang này đang ở chế độ riêng tư.</p>
+            </div>
+
+            <div id="more-menu" class="hidden absolute right-4 top-12 w-[240px] bg-[#202020] border border-[#2c2c2c] rounded-lg shadow-2xl py-1.5 text-gray-300 text-xs z-50 select-none animate-in fade-in zoom-in-95 duration-100" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between px-2 pb-1.5 border-b border-[#2c2c2c]/70">
+                    <button onclick="window.changeFont('font-sans')" class="flex-1 py-2 text-center rounded hover:bg-[#2c2c2c] font-sans font-bold text-blue-400 text-[11px] transition">Sans</button>
+                    <button onclick="window.changeFont('font-serif')" class="flex-1 py-2 text-center rounded hover:bg-[#2c2c2c] font-serif text-[11px] transition">Serif</button>
+                    <button onclick="window.changeFont('font-mono')" class="flex-1 py-2 text-center rounded hover:bg-[#2c2c2c] font-mono text-[11px] transition">Mono</button>
+                </div>
+
+                <div class="py-1 border-b border-[#2c2c2c]/70">
+                    <button onclick="window.copyPageContents()" class="w-full flex items-center px-3 py-2 hover:bg-[#2c2c2c] transition text-left">
+                        <i class="fa-regular fa-copy w-5 text-gray-400 text-sm"></i>
+                        <span class="flex-1">Copy page contents</span>
+                    </button>
+                    <button onclick="window.duplicatePage()" class="w-full flex items-center px-3 py-2 hover:bg-[#2c2c2c] transition text-left">
+                        <i class="fa-regular fa-clone w-5 text-gray-400 text-sm"></i>
+                        <span class="flex-1">Duplicate (Nhân bản)</span>
+                    </button>
+                </div>
+
+                <div class="py-1 border-b border-[#2c2c2c]/70">
+                    <label class="w-full flex items-center justify-between px-3 py-2 hover:bg-[#2c2c2c] cursor-pointer transition">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-text-height w-5 text-gray-400 text-sm"></i>
+                            <span>Small text</span>
+                        </div>
+                        <input type="checkbox" id="toggle-small-text-input" onchange="window.toggleSmallText()" class="sr-only peer">
+                        <div class="w-7 h-4 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all relative peer-checked:bg-blue-600"></div>
+                    </label>
+
+                    <label class="w-full flex items-center justify-between px-3 py-2 hover:bg-[#2c2c2c] cursor-pointer transition">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-arrows-left-right w-5 text-gray-400 text-sm"></i>
+                            <span>Full width</span>
+                        </div>
+                        <input type="checkbox" id="toggle-fullwidth-input" onchange="window.changePageWidth(event)" class="sr-only peer">
+                        <div class="w-7 h-4 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all relative peer-checked:bg-blue-600"></div>
+                    </label>
+
+                    <label class="w-full flex items-center justify-between px-3 py-2 hover:bg-[#2c2c2c] cursor-pointer transition">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-lock w-5 text-gray-400 text-sm"></i>
+                            <span>Lock page</span>
+                        </div>
+                        <input type="checkbox" id="toggle-lock-input" onchange="window.toggleLockPage()" class="sr-only peer">
+                        <div class="w-7 h-4 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all relative peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+
+                <div class="py-1 border-b border-[#2c2c2c]/70">
+                    <button onclick="window.translatePage('en')" class="w-full flex items-center px-3 py-1.5 hover:bg-[#2c2c2c] transition text-left">
+                        <i class="fa-solid fa-language w-5 text-gray-400 text-sm"></i>
+                        <span>Translate to English 🇬🇧</span>
+                    </button>
+                    <button onclick="window.exportPage('md')" class="w-full flex items-center px-3 py-1.5 hover:bg-[#2c2c2c] transition text-left">
+                        <i class="fa-regular fa-file-lines w-5 text-gray-400 text-sm"></i>
+                        <span>Export to Markdown (.md)</span>
+                    </button>
+                </div>
+
+                <div class="py-1">
+                    <button onclick="window.openHistoryModal(event)" class="w-full flex items-center px-3 py-2 hover:bg-[#2c2c2c] transition text-left">
+                        <i class="fa-solid fa-clock-rotate-left w-5 text-gray-400 text-sm"></i>
+                        <span>Version history</span>
+                    </button>
+                    <button onclick="window.triggerDeleteFromMenu()" class="w-full flex items-center px-3 py-2 hover:bg-red-950/30 hover:text-red-400 transition text-left text-red-500">
+                        <i class="fa-regular fa-trash-can w-5 text-red-500/80"></i>
+                        <span>Move to Trash (Xóa)</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="history-sidebar" class="hidden fixed inset-0 z-[100] flex justify-end overflow-hidden animate-in fade-in duration-200">
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-[0.5px]" onclick="window.closeHistoryModal(event)"></div>
+        <div class="relative w-[300px] h-full bg-[#1c1c1c] border-l border-[#2c2c2c] shadow-2xl flex flex-col justify-between z-10 translate-x-full transition-transform duration-300 ease-out" id="history-sidebar-content">
+            <div class="px-4 py-3.5 border-b border-[#2c2c2c] flex items-center justify-between bg-[#1f1f1f]">
+                <div>
+                    <h3 class="font-semibold text-xs text-gray-200">Version history</h3>
+                    <p class="text-[10px] text-gray-500 mt-0.5">Bản lưu tự động (mỗi 45s)</p>
+                </div>
+                <button onclick="window.closeHistoryModal(event)" class="w-6 h-6 flex items-center justify-center rounded hover:bg-[#2c2c2c] text-gray-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+            <div id="history-list" class="flex-1 overflow-y-auto p-2 space-y-0.5 bg-[#1c1c1c]">
+                <div class="text-center py-8 text-gray-500 text-[11px]">Đang tải lịch sử...</div>
+            </div>
+            <div class="p-3 border-t border-[#2c2c2c] bg-[#1f1f1f] flex flex-col space-y-2">
+                <div class="flex items-center text-[10px] text-gray-500 hover:text-gray-400 cursor-pointer">
+                    <i class="fa-regular fa-circle-question mr-1.5 text-xs"></i>
+                    <span>Learn more</span>
+                </div>
+                <button id="btn-restore-history" disabled onclick="window.restoreSelectedHistory()" class="w-full py-1.5 bg-blue-600 hover:bg-blue-500 disabled:bg-[#2c2c2c] disabled:text-gray-600 text-white rounded font-medium text-xs transition duration-150">
+                    Restore
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+</body>
+</html>
