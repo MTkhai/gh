@@ -1,4 +1,10 @@
 
+import { state } from "../store/state.js";
+
+function runSearch(keyword) {
+    const filtered = state.pages.filter(page => !page.isDeleted && (page.title || "Untitled").toLowerCase().includes(keyword.toLowerCase().trim()));
+}
+
 // ================= 6. LOGIC TÌM KIẾM (SEARCH) =================
 export const openSearch = () => {
     const modal = document.getElementById("search-modal");
