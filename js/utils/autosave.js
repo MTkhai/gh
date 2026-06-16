@@ -27,7 +27,7 @@ export const save = () => {
 
         const now = Date.now();
         const timeInterval = 45 * 1000;
-        const pageLastSave = lastSnapshotTimeMap[state.curId] || 0;
+        const pageLastSave = state.lastSnapshotTimeMap[state.curId] || 0;
         
         if (now - pageLastSave > timeInterval && c.trim() !== "") {
             try {
@@ -35,7 +35,7 @@ export const save = () => {
                     pageId: state.curId, title: t, content: c, 
                     preview: c.substring(0, 40).replace(/\n/g, " "), ts: now 
                 });
-                lastSnapshotTimeMap[state.curId] = now; 
+                state.lastSnapshotTimeMap[state.curId] = now; 
                 console.log(`🔒 Checkpoint 45s chốt tại trang: ${state.curId}`);
             } catch (e) {
                 console.error("Snapshot thất bại:", e);
