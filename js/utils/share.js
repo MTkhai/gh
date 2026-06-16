@@ -123,3 +123,10 @@ export const updateShareUI = (isPublic) => {
         if (msg) msg.classList.remove("hidden"); 
     }
 }
+
+
+window.togglePublicShare = togglePublicShare;
+window.updateShareRole = updateShareRole;
+window.copyPublicLink = copyPublicLink;
+window.toggleAllowFavourites = toggleAllowFavourites;
+window.toggleFavourite = toggleFavourite;
