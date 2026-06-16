@@ -60,7 +60,7 @@ window.closeAuth = closeAuth;
 window.updateAuthUI = updateAuthUI;
 window.authToggleBtn = authToggleBtn;
 window.authForm = authForm;
-window.logout = () => signOut(auth);
+window.logout = logout;
 window.onAuthStateChanged = onAuthStateChanged;
 window.loadPublicPage = loadPublicPage;
 
