@@ -44,13 +44,13 @@ export const toggleFavourite = async (pageId, currentStatus) => {
     const curPage = state.pages.find(x => x.id === pageId);
 
     // 1. Nếu là CHỦ bài viết tự bấm thích bài của mình
-    if (curPage && user && curPage.uid === user.uid) {
+    if (curPage && state.user && curPage.uid === state.user.uid) {
         await updateDoc(pageRef, { isFavourite: !currentStatus });
         return;
     }
 
     // 2. Nếu là NGƯỜI NGOÀI (GUEST) bấm thả sao
-    if (!user) {
+    if (!state.user) {
         alert("Bro đăng nhập vào mới thả sao tích điểm được chứ! 😄");
         window.openAuth('login');
         return;
@@ -65,10 +65,10 @@ export const toggleFavourite = async (pageId, currentStatus) => {
         }
 
         let favouritesBy = data.favouritesBy || [];
-        if (favouritesBy.includes(user.uid)) {
-            favouritesBy = favouritesBy.filter(uid => uid !== user.uid);
+        if (favouritesBy.includes(state.user.uid)) {
+            favouritesBy = favouritesBy.filter(uid => uid !== state.user.uid);
         } else {
-            favouritesBy.push(user.uid);
+            favouritesBy.push(state.user.uid);
         }
         await updateDoc(pageRef, { favouritesBy: favouritesBy });
     }
