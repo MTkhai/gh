@@ -1,3 +1,6 @@
+import { collection, addDoc, getDocs, query, where, orderBy, doc, updateDoc, db } from "../config/firebase-config.js";
+import { state } from "../store/state.js";
+
 // ================= 11. VERSION HISTORY (CHẶN NỔI BỌT CLICK) =================
 export const openHistoryModal = async (e) => {
     if (e) e.stopPropagation(); 
