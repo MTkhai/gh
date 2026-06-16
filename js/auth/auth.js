@@ -107,7 +107,7 @@ export const loadPublicPage = async (pageId) => {
                 if (favZone) {
                     if (data.allowFavourites !== false) {
                         const totalFavs = data.favouritesBy ? data.favouritesBy.length : 0;
-                        const userHasFav = user && data.favouritesBy && data.favouritesBy.includes(user.uid);
+                        const userHasFav = state.user && data.favouritesBy && data.favouritesBy.includes(state.user.uid);
                         
                         // Khách chỉ nhìn thấy nút bấm + Tổng số lượt sao, không có list tên!
                         favZone.innerHTML = `
