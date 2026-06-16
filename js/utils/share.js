@@ -1,3 +1,5 @@
+import { collection, addDoc, getDocs, query, where, orderBy, doc, updateDoc, db } from "../config/firebase-config.js";
+
 // ================= 10. SHARE LINK & PHÂN QUYỀN ĐỘNG =================
 export const togglePublicShare = async () => {
     if (!curId) return;
