@@ -44,3 +44,18 @@ export const searchInput = document.getElementById("search-input");
 if (searchInput) {
     searchInput.oninput = (e) => runSearch(e.target.value);
 }
+
+// Đóng search khi nhấn ESC và mở search khi nhấn Ctrl+K / Cmd+K
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        window.closeSearch();
+    } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (document.getElementById("search-modal").classList.contains("hidden")) {
+            window.openSearch();
+        } else {
+            window.closeSearch();
+        }
+    }
+});
+
