@@ -34,10 +34,8 @@ import {save} from "./utils/autosave.js";
 import { openHistoryModal, closeHistoryModal, restoreSelectedHistory } from "./history/history.js";
 import { toggleFavourite, updateShareRole, copyPublicLink, toggleAllowFavourites } from "./utils/share.js";
 
-// ================= 1. KHAI BÁO BIẾN TOÀN CỤC HỆ THỐNG =================
+import { updateSlashMenuHighlight, executeSlashCommand } from "./ui/splashmodal.js";
 
-
-// ================= 2.Gắn tên hàm sự kiện =================
 window.toggleMenu = toggleMenu;
 window.toggleTrash = toggleTrash;
 window.openSearch = openSearch;
@@ -74,11 +72,8 @@ window.toggleFavourite = toggleFavourite;
 window.updateShareRole = updateShareRole;
 window.copyPublicLink = copyPublicLink;
 window.toggleAllowFavourites = toggleAllowFavourites;
-
-
-
-
-
+window.updateSlashMenuHighlight = updateSlashMenuHighlight;
+window.executeSlashCommand = executeSlashCommand;
 
 
 
