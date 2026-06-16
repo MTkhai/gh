@@ -146,3 +146,10 @@ export const createNewPage = async () => {
     } catch (e) {}
 };
 
+// tạo trang mới bằng tổ hợp phím ctrl+N / cmd+N
+document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
+        e.preventDefault();
+        window.createNewPage();
+    }
+});
