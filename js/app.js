@@ -20,7 +20,7 @@ import {
 } from "./search/search.js";
 
 import { state } from "./store/state.js";
-import { render, loadData,select,createNewPage} from "./pages/pages.js";
+import { render, loadData,select,createNewPage, exportPage, pagePriorityInput,pageTitleInput} from "./pages/pages.js";
 import { moveToTrash, restorePage, deleteForever } from "./pages/trash.js";
 import {openAuth
 ,closeAuth
@@ -396,19 +396,3 @@ function updateShareUI(isPublic) {
         if (msg) msg.classList.remove("hidden"); 
     }
 }
-window.exportPage = (format) => {
-    const title = document.getElementById("page-title").value || "Untitled";
-    const content = document.getElementById("page-content").value;
-    let fileContent = format === 'md' ? `# ${title}\n\n${content}` : `TIÊU ĐỀ: ${title}\nNỘI DUNG:\n${content}`;
-    
-    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${title}.${format === 'md' ? 'md' : 'txt'}`;
-    a.click();
-};
-
-const pageTitleInput = document.getElementById("page-title");
-const pagePriorityInput = document.getElementById("page-priority");
-if (pageTitleInput) pageTitleInput.oninput = save;
-if (pagePriorityInput) pagePriorityInput.onchange = save;

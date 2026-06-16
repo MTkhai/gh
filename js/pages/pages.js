@@ -153,3 +153,20 @@ document.addEventListener("keydown", (e) => {
         window.createNewPage();
     }
 });
+
+export const exportPage = (format) => {
+    const title = document.getElementById("page-title").value || "Untitled";
+    const content = document.getElementById("page-content").value;
+    let fileContent = format === 'md' ? `# ${title}\n\n${content}` : `TIÊU ĐỀ: ${title}\nNỘI DUNG:\n${content}`;
+    
+    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${title}.${format === 'md' ? 'md' : 'txt'}`;
+    a.click();
+};
+
+export const pageTitleInput = document.getElementById("page-title");
+export const pagePriorityInput = document.getElementById("page-priority");
+if (pageTitleInput) pageTitleInput.oninput = save;
+if (pagePriorityInput) pagePriorityInput.onchange = save;
