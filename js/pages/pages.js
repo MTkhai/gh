@@ -146,9 +146,9 @@ export const createNewPage = async () => {
     } catch (e) {}
 };
 
-// tạo trang mới bằng tổ hợp phím ctrl+N / cmd+N
+// tạo trang mới bằng tổ hợp phím ctrl+N / cmd+N và ghi đè lệnh của trình duyệt
 document.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "t") {
         e.preventDefault();
         window.createNewPage();
     }
