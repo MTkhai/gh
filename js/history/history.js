@@ -19,14 +19,13 @@ export const openHistoryModal = async (e) => {
 
     const restoreBtn = document.getElementById("btn-restore-history");
     if (restoreBtn) restoreBtn.disabled = true;
-    selectedHistoryDoc = null;
 
     const listContainer = document.getElementById("history-list");
     if (!listContainer) return;
     listContainer.innerHTML = `<div class="text-center py-6 text-gray-500 text-[11px]">⏳ Đang tìm bản lưu...</div>`;
 
     try {
-        const q = query(collection(db, "history"), where("pageId", "==", curId), orderBy("ts", "desc"));
+        const q = query(collection(db, "history"), where("pageId", "==", state.curId), orderBy("ts", "desc"));
         const snap = await getDocs(q);
         
         if (snap.empty) {
@@ -55,7 +54,7 @@ export const openHistoryModal = async (e) => {
                 document.getElementById("page-content").value = data.content || "";
                 
                 if (restoreBtn) restoreBtn.disabled = false;
-                selectedHistoryDoc = { id: docSnap.id, ...data };
+                state.selectedHistoryDoc = { id: docSnap.id, ...data };
             };
 
             btn.innerHTML = `
@@ -81,7 +80,7 @@ export const closeHistoryModal = (e) => {
     innerContent.classList.add("translate-x-full");
     setTimeout(() => {
         sidebar.classList.add("hidden");
-        const p = pages.find(x => x.id === curId);
+        const p = state.pages.find(x => x.id === state.curId);
         if (p) {
             document.getElementById("page-title").value = p.title || "";
             document.getElementById("page-content").value = p.content || "";
@@ -90,11 +89,11 @@ export const closeHistoryModal = (e) => {
 };
 
 export const restoreSelectedHistory = async () => {
-    if (!selectedHistoryDoc || !curId) return;
+    if (!state.selectedHistoryDoc || !state.curId) return;
     try {
-        await updateDoc(doc(db, "docs", curId), {
-            title: selectedHistoryDoc.title,
-            content: selectedHistoryDoc.content,
+        await updateDoc(doc(db, "docs", state.curId), {
+            title: state.selectedHistoryDoc.title,
+            content: state.selectedHistoryDoc.content,
             ts: Date.now()
         });
         window.closeHistoryModal();
