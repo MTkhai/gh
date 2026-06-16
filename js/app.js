@@ -44,6 +44,7 @@ window.changeFont = changeFont;
 window.changePageWidth = changePageWidth;
 window.duplicatePage = duplicatePage;
 window.triggerDeleteFromMenu = triggerDeleteFromMenu;
+window.pageState = state;
 
 
 

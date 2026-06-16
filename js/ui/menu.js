@@ -1,8 +1,5 @@
 import { state } from "../store/state.js";
 
-export function toggleSmallText() {
-    state.isSmallText = !state.isSmallText;
-}
 
 // ================= 3. POPUP MENU & TRASH TOGGLE (CHẶN NỔI BỌT) =================
 export const toggleMenu = (e, menuId) => {
@@ -34,32 +31,32 @@ export const copyPageContents = () => {
 };
 
 export const toggleSmallText = () => {
-    isSmallText = !isSmallText;
+    state.isSmallText = !state.isSmallText;
     const title = document.getElementById("page-title");
     const content = document.getElementById("page-content");
     
-    if (isSmallText) {
+    if (state.isSmallText) {
         title.classList.add("text-xl"); title.classList.remove("text-4xl");
         content.classList.add("text-xs"); content.classList.remove("text-base");
     } else {
         title.classList.add("text-4xl"); title.classList.remove("text-xl");
         content.classList.add("text-base"); content.classList.remove("text-xs");
     }
-    document.getElementById("toggle-small-text-input").checked = isSmallText;
+    document.getElementById("toggle-small-text-input").checked = state.isSmallText;
 };
 
 export const toggleLockPage = () => {
-    isPageLocked = !isPageLocked;
+    state.isPageLocked = !state.isPageLocked;
     const title = document.getElementById("page-title");
     const content = document.getElementById("page-content");
     const priority = document.getElementById("page-priority");
 
-    title.disabled = isPageLocked;
-    content.disabled = isPageLocked;
-    if (priority) priority.disabled = isPageLocked;
+    title.disabled = state.isPageLocked;
+    content.disabled = state.isPageLocked;
+    if (priority) priority.disabled = state.isPageLocked;
 
-    document.getElementById("toggle-lock-input").checked = isPageLocked;
-    alert(isPageLocked ? "🔒 Đã khóa trang!" : "🔓 Đã mở khóa trang!");
+    document.getElementById("toggle-lock-input").checked = state.isPageLocked;
+    alert(state.isPageLocked ? "🔒 Đã khóa trang!" : "🔓 Đã mở khóa trang!");
 };
 
 export const translatePage = async (lang) => {

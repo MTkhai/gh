@@ -1,10 +1,6 @@
 
 import { state } from "../store/state.js";
 
-function runSearch(keyword) {
-    const filtered = state.pages.filter(page => !page.isDeleted && (page.title || "Untitled").toLowerCase().includes(keyword.toLowerCase().trim()));
-}
-
 // ================= 6. LOGIC TÌM KIẾM (SEARCH) =================
 export const openSearch = () => {
     const modal = document.getElementById("search-modal");
@@ -27,7 +23,7 @@ export const closeSearch = () => {
 
 export const runSearch = (keyword) => {
     const kw = keyword.toLowerCase().trim();
-    const filtered = pages.filter(p => !p.isDeleted && (p.title || "Untitled").toLowerCase().includes(kw));
+    const filtered = state.pages.filter(p => !p.isDeleted && (p.title || "Untitled").toLowerCase().includes(kw));
     const container = document.getElementById("search-results");
     if (!container) return;
     if (filtered.length === 0) {
