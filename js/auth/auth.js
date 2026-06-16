@@ -2,7 +2,7 @@ import { db, auth, collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy
 import { state } from "./store/state.js";
 // ================= 2. ĐẬP CÁC HÀM GIAO DIỆN LÊN ĐẦU ĐỂ KHÔNG BỊ CHẶN LỖI =================
 export const openAuth = (type) => {
-    isLogin = (type === 'login');
+    state.isLogin = (type === 'login');
     const modal = document.getElementById("auth-modal");
     if (modal) { 
         modal.classList.remove("hidden"); 
@@ -19,8 +19,8 @@ export const closeAuth = () => {
 export const updateAuthUI = () => {
     const title = document.getElementById("auth-title");
     const btn = document.getElementById("auth-toggle-btn");
-    if (title) title.innerText = isLogin ? "Sign in to Zotion" : "Create account";
-    if (btn) btn.innerText = isLogin ? "Sign up" : "Sign in";
+    if (title) title.innerText = state.isLogin ? "Sign in to Zotion" : "Create account";
+    if (btn) btn.innerText = state.isLogin ? "Sign up" : "Sign in";
 };
 
 
@@ -39,7 +39,7 @@ document.addEventListener("click", () => {
 // ================= 7. AUTHENTICATION & GUEST MODE =================
 export const authToggleBtn = document.getElementById("auth-toggle-btn");
 if (authToggleBtn) {
-    authToggleBtn.onclick = () => { isLogin = !isLogin; updateAuthUI(); };
+    authToggleBtn.onclick = () => { state.isLogin = !state.isLogin; updateAuthUI(); };
 }
 
 export const authForm = document.getElementById("auth-form");
@@ -48,7 +48,7 @@ if (authForm) {
         e.preventDefault();
         const email = document.getElementById("auth-email").value, pass = document.getElementById("auth-password").value;
         try {
-            if (isLogin) await signInWithEmailAndPassword(auth, email, pass);
+            if (state.isLogin) await signInWithEmailAndPassword(auth, email, pass);
             else await createUserWithEmailAndPassword(auth, email, pass);
             window.closeAuth();
         } catch (err) { alert(err.message); }
