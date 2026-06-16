@@ -1,4 +1,4 @@
-import { db, auth, collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot, where, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, getDocs } from "./firebase-config.js";
+import { db, auth, collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot, where, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, getDocs } from "./config/firebase-config.js";
 import { getRelativeTime } from "./utils/helpers.js";
 import {
   toggleMenu,
@@ -22,14 +22,7 @@ import {
 import { state } from "./store/state.js";
 import { render, loadData,select,createNewPage } from "./pages/pages.js";
 // ================= 1. KHAI BÁO BIẾN TOÀN CỤC HỆ THỐNG =================
-let isLogin = true;
-let un_sub = null;
-export let st = null; 
-let lastSnapshotTimeMap = {};
-let isSmallText = false;
-let isPageLocked = false;
-let selectedHistoryDoc = null;
-let currentPublicPageData = null;
+
 
 // ================= 2.Gắn tên hàm sự kiện =================
 window.toggleMenu = toggleMenu;

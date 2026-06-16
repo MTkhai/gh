@@ -6,5 +6,10 @@ export const state = {
     isSmallText: false,
     isPageLocked: false,
 
-    st: null
+    st: null,
+    isLogin: true,
+    un_sub: null,
+    lastSnapshotTimeMap: {},
+    selectedHistoryDoc: null,
+    currentPublicPageData: null
 };

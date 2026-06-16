@@ -1,7 +1,10 @@
+import{state} from "../store/state.js";
+import { collection, addDoc, onSnapshot, query, where, orderBy, doc, updateDoc } from "../config/firebase-config.js";
+
 // ================= 8. FIRESTORE SYNC & RENDER =================
 export const loadData = (uid) => {
-    if (un_sub) un_sub();
-    un_sub = onSnapshot(query(collection(db, "docs"), where("uid", "==", uid), orderBy("ts", "asc")), (s) => {
+    if (state.un_sub) state.un_sub();
+    state.un_sub = onSnapshot(query(collection(db, "docs"), where("uid", "==", uid), orderBy("ts", "asc")), (s) => {
         let temp = []; s.forEach(d => temp.push({id: d.id, ...d.data()}));
         state.pages = temp.reverse();
         render();
@@ -86,7 +89,7 @@ export const render = () => {
 
 export const select = async (id) => {
     if (state.curId && state.curId !== id && state.user) {
-        if (st) clearTimeout(st);
+        if (state.st) clearTimeout(state.st);
         const t = document.getElementById("page-title").value;
         const c = document.getElementById("page-content").value;
         const p = document.getElementById("page-priority").value;
@@ -109,8 +112,8 @@ export const select = async (id) => {
         if (document.getElementById("share-access-role")) document.getElementById("share-access-role").value = p.publicRole || "viewer";
         if (typeof updateShareUI === "function") updateShareUI(isPub);
 
-        isPageLocked = false;
-        isSmallText = false;
+        state.isPageLocked = false;
+        state.isSmallText = false;
         
         document.getElementById("page-title").disabled = false;
         document.getElementById("page-content").disabled = false;
@@ -129,7 +132,7 @@ export const select = async (id) => {
 export const createNewPage = async () => {
     if (!state.user) return;
     if (state.curId) {
-        if (st) clearTimeout(st);
+        if (state.st) clearTimeout(state.st);
         try { await updateDoc(doc(db, "docs", state.curId), { title: document.getElementById("page-title").value, content: document.getElementById("page-content").value, priority: document.getElementById("page-priority").value }); } catch (e) {}
     }
     try {
