@@ -1,3 +1,9 @@
+import { state } from "../store/state.js";
+
+export function toggleSmallText() {
+    state.isSmallText = !state.isSmallText;
+}
+
 // ================= 3. POPUP MENU & TRASH TOGGLE (CHẶN NỔI BỌT) =================
 export const toggleMenu = (e, menuId) => {
     if (e) e.stopPropagation();

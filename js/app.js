@@ -18,10 +18,9 @@ import {
   closeSearch,
   runSearch,
 } from "./search/search.js";
+
+import { state } from "./store/state.js";
 // ================= 1. KHAI BÁO BIẾN TOÀN CỤC HỆ THỐNG =================
-let user = null;
-let curId = null;
-let pages = [];
 let isLogin = true;
 let un_sub = null;
 export let st = null; 
