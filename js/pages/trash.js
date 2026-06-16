@@ -23,3 +23,11 @@ export const restorePage = async (id) => {
 export const deleteForever = async (id) => {
     if (confirm("Xóa vĩnh viễn trang này?")) await deleteDoc(doc(db, "docs", id));
 };
+
+// chuyển trang vào thùng rác bằng tổ hợp phím delete
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Delete" && state.curId) {
+        e.preventDefault();
+        window.moveToTrash(state.curId);
+    }
+});

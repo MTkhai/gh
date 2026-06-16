@@ -153,4 +153,3 @@ document.addEventListener("keydown", (e) => {
         window.createNewPage();
     }
 });
-// xóa trang 
