@@ -92,12 +92,12 @@ export const changePageWidth = (e) => {
 };
 
 export const duplicatePage = async () => {
-    if (!curId || !user) return;
-    const curPage = pages.find(p => p.id === curId);
+    if (!state.curId || !state.user) return;
+    const curPage = state.pages.find(p => p.id === state.curId);
     if (!curPage) return;
     try {
         const docRef = await addDoc(collection(db, "docs"), {
-            uid: user.uid, title: `${curPage.title || "Untitled"} (Copy)`,
+            uid: state.user.uid, title: `${curPage.title || "Untitled"} (Copy)`,
             content: curPage.content || "", priority: curPage.priority || "low",
             isDeleted: false, isFavourite: false, ts: Date.now()
         });
@@ -107,4 +107,4 @@ export const duplicatePage = async () => {
     }
 };
 
-export const triggerDeleteFromMenu = () => { if (curId) window.moveToTrash(curId); };
+export const triggerDeleteFromMenu = () => { if (state.curId) window.moveToTrash(state.curId); };
