@@ -27,6 +27,7 @@ import {openAuth
 ,updateAuthUI
 ,authToggleBtn
 ,logout
+,authForm
 ,loadPublicPage
 } from "./auth/auth.js";
 import {save} from "./utils/autosave.js";
@@ -64,7 +65,6 @@ window.updateAuthUI = updateAuthUI;
 window.authToggleBtn = authToggleBtn;
 window.authForm = authForm;
 window.logout = logout;
-window.onAuthStateChanged = onAuthStateChanged;
 window.save = save;
 window.loadPublicPage = loadPublicPage;
 window.openHistoryModal = openHistoryModal;
