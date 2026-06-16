@@ -1,5 +1,5 @@
-import { db, auth, collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot, where, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "./config/firebase-config.js";
-import { state } from "./store/state.js";
+import { db, auth, collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot, where, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "../config/firebase-config.js";
+import { state } from "../store/state.js";
 // ================= 2. ĐẬP CÁC HÀM GIAO DIỆN LÊN ĐẦU ĐỂ KHÔNG BỊ CHẶN LỖI =================
 export const openAuth = (type) => {
     state.isLogin = (type === 'login');
