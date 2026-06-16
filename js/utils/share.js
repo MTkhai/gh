@@ -1,8 +1,9 @@
 import { collection, addDoc, getDocs, query, where, orderBy, doc, updateDoc, db } from "../config/firebase-config.js";
+import { state } from "../store/state.js";
 
 // ================= 10. SHARE LINK & PHÂN QUYỀN ĐỘNG =================
 export const togglePublicShare = async () => {
-    if (!curId) return;
+    if (!state.curId) return;
     const isChecked = document.getElementById("share-public-toggle").checked;
     const role = document.getElementById("share-access-role").value;
     
@@ -10,7 +11,7 @@ export const togglePublicShare = async () => {
     const allowFavEl = document.getElementById("allow-fav-toggle");
     const allowFav = allowFavEl ? allowFavEl.checked : true;
 
-    await updateDoc(doc(db, "docs", curId), { 
+    await updateDoc(doc(db, "docs", state.curId), { 
         isPublic: isChecked, 
         publicRole: isChecked ? role : 'viewer',
         allowFavourites: allowFav
@@ -19,28 +20,28 @@ export const togglePublicShare = async () => {
 };
 
 export const updateShareRole = async () => {
-    if (!curId) return;
+    if (!state.curId) return;
     const role = document.getElementById("share-access-role").value;
-    await updateDoc(doc(db, "docs", curId), { publicRole: role });
+    await updateDoc(doc(db, "docs", state.curId), { publicRole: role });
 };
 
 export const copyPublicLink = () => {
-    if (!curId) return;
-    const publicUrl = `${window.location.origin}${window.location.pathname}?page=${curId}`;
+    if (!state.curId) return;
+    const publicUrl = `${window.location.origin}${window.location.pathname}?page=${state.curId}`;
     navigator.clipboard.writeText(publicUrl);
     alert("Đã copy link chia sẻ công khai rồi nha bro! 🚀");
 };
 
 export const toggleAllowFavourites = async () => {
-    if (!curId) return;
+    if (!state.curId) return;
     const isChecked = document.getElementById("allow-fav-toggle").checked;
-    await updateDoc(doc(db, "docs", curId), { allowFavourites: isChecked });
+    await updateDoc(doc(db, "docs", state.curId), { allowFavourites: isChecked });
 };
 
 export const toggleFavourite = async (pageId, currentStatus) => {
     if (!pageId) return;
     const pageRef = doc(db, "docs", pageId);
-    const curPage = pages.find(x => x.id === pageId);
+    const curPage = state.pages.find(x => x.id === pageId);
 
     // 1. Nếu là CHỦ bài viết tự bấm thích bài của mình
     if (curPage && user && curPage.uid === user.uid) {
@@ -83,7 +84,7 @@ export const updateShareUI = (isPublic) => {
         if (msg) msg.classList.add("hidden"); 
         
         // Check xem có phải CHỦ đang mở bài của mình không
-        const curPage = pages.find(x => x.id === curId);
+        const curPage = state.pages.find(x => x.id === state.curId);
         
         if (curPage) {
             // Đồng bộ nút gạt cho chủ bài viết
