@@ -1,5 +1,5 @@
 import { db, auth, collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot, where, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "./config/firebase-config.js";
-
+import { state } from "./store/state.js";
 // ================= 2. ĐẬP CÁC HÀM GIAO DIỆN LÊN ĐẦU ĐỂ KHÔNG BỊ CHẶN LỖI =================
 export const openAuth = (type) => {
     isLogin = (type === 'login');
@@ -58,9 +58,6 @@ if (authForm) {
 export const logout = () => signOut(auth);
 
 
-export const onAuthStateChanged = (auth, callback) => {
-    return onAuthStateChanged(auth, callback);
-};
 
 onAuthStateChanged(auth, (u) => {
     const landing = document.getElementById("landing-page"), dash = document.getElementById("dashboard");
