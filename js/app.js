@@ -27,7 +27,6 @@ import {openAuth
 ,updateAuthUI
 ,authToggleBtn
 ,logout
-,onAuthStateChanged
 ,loadPublicPage
 } from "./auth/auth.js";
 // ================= 1. KHAI BÁO BIẾN TOÀN CỤC HỆ THỐNG =================
