@@ -146,10 +146,11 @@ export const createNewPage = async () => {
     } catch (e) {}
 };
 
-// tạo trang mới bằng tổ hợp phím ctrl+shft+t hoặc cmd+shift+t trên Mac
+// tạo trang mới bằng tổ hợp phím ctrl+O
 document.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "t") {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") {
         e.preventDefault();
         window.createNewPage();
     }
 });
+// xóa trang 
