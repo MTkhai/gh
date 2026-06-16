@@ -176,12 +176,12 @@ function loadData(uid) {
     if (un_sub) un_sub();
     un_sub = onSnapshot(query(collection(db, "docs"), where("uid", "==", uid), orderBy("ts", "asc")), (s) => {
         let temp = []; s.forEach(d => temp.push({id: d.id, ...d.data()}));
-        pages = temp.reverse();
+        state.pages = temp.reverse();
         render();
-        const active = pages.filter(p => !p.isDeleted);
-        if (!curId && active.length > 0) { window.select(active[0].id); return; }
-        if (curId) {
-            const current = pages.find(x => x.id === curId);
+        const active = state.pages.filter(p => !p.isDeleted);
+        if (!state.curId && active.length > 0) { window.select(active[0].id); return; }
+        if (state.curId) {
+            const current = state.pages.find(x => x.id === state.curId);
             if (current) {
                 document.getElementById("breadcrumb-title").innerText = current.title || "Untitled";
                 document.getElementById("page-priority").value = current.priority || "low";
@@ -192,12 +192,12 @@ function loadData(uid) {
 }
 
 function render() {
-    const active = pages.filter(p => !p.isDeleted);
+    const active = state.pages.filter(p => !p.isDeleted);
     const favorites = active.filter(p => p.isFavourite);
     const priorityIcons = { high: "🔴", medium: "🟡", low: "🔵", trash: "⚪" };
 
     document.getElementById("sidebar-favorites").innerHTML = favorites.map(p => {
-        const favActiveClass = p.id === curId ? 'bg-[#2f2f2f] text-white' : 'text-gray-400';
+        const favActiveClass = p.id === state.curId ? 'bg-[#2f2f2f] text-white' : 'text-gray-400';
         return `
             <div onclick="window.select('${p.id}')" class="p-1.5 rounded hover:bg-[#2f2f2f] cursor-pointer text-xs flex justify-between group ${favActiveClass}">
                 <span class="truncate"><i class="fa-solid fa-star text-yellow-500 mr-1 text-[10px]"></i>${p.title || 'Untitled'}</span>
@@ -207,7 +207,7 @@ function render() {
 
     document.getElementById("sidebar-pages").innerHTML = active.map(p => {
         const icon = priorityIcons[p.priority] || priorityIcons['low'];
-        const activeClass = p.id === curId ? 'bg-[#2f2f2f] text-white' : 'text-gray-400';
+        const activeClass = p.id === state.curId ? 'bg-[#2f2f2f] text-white' : 'text-gray-400';
         return `
             <div onclick="window.select('${p.id}')" class="p-1.5 rounded hover:bg-[#2f2f2f] cursor-pointer text-xs flex justify-between group ${activeClass}">
                 <span class="truncate">
@@ -220,13 +220,13 @@ function render() {
         `;
     }).join('');
 
-    if (curId) {
-    const curPage = pages.find(x => x.id === curId);
+    if (state.curId) {
+    const curPage = state.pages.find(x => x.id === state.curId);
     const starIcon = document.getElementById("main-star-icon");
     const favZone = document.getElementById("dynamic-fav-zone");
     
     // Nếu là CHỦ bài viết đang xem trang của mình
-    if (curPage && user && curPage.uid === user.uid) {
+    if (curPage && state.user && curPage.uid === state.user.uid) {
         if (starIcon) {
             if (curPage.isFavourite) {
                 starIcon.className = "fa-solid fa-star text-yellow-500 cursor-pointer transition p-1 rounded hover:bg-[#2c2c2c]";
@@ -239,7 +239,7 @@ function render() {
     }
 }
 
-    const deleted = pages.filter(p => p.isDeleted);
+    const deleted = state.pages.filter(p => p.isDeleted);
     document.getElementById("trash-count").innerText = deleted.length;
     const trashContainer = document.getElementById("trash-list");
     if (deleted.length === 0) {
@@ -258,18 +258,18 @@ function render() {
 }
 
 window.select = async (id) => {
-    if (curId && curId !== id && user) {
+    if (state.curId && state.curId !== id && state.user) {
         if (st) clearTimeout(st);
         const t = document.getElementById("page-title").value;
         const c = document.getElementById("page-content").value;
         const p = document.getElementById("page-priority").value;
-        try { await updateDoc(doc(db, "docs", curId), { title: t, content: c, priority: p }); } catch (e) {}
+        try { await updateDoc(doc(db, "docs", state.curId), { title: t, content: c, priority: p }); } catch (e) {}
     }
     
-    curId = id; 
+    state.curId = id;
     render(); 
     
-    const p = pages.find(x => x.id === id);
+    const p = state.pages.find(x => x.id === id);
     if (p) {
         document.getElementById("page-title").value = p.title || "";
         document.getElementById("page-content").value = p.content || "";
