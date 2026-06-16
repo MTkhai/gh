@@ -1,5 +1,5 @@
 import{state} from "../store/state.js";
-import { collection, addDoc, onSnapshot, query, where, orderBy, doc, updateDoc, db } from "../config/firebase-config.js";
+import { collection, addDoc,deleteDoc, onSnapshot, query, where, orderBy, doc, updateDoc, db } from "../config/firebase-config.js";
 import { getRelativeTime } from "../utils/helpers.js";
 
 // ================= 8. FIRESTORE SYNC & RENDER =================
