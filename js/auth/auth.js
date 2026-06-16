@@ -91,7 +91,7 @@ export const loadPublicPage = async (pageId) => {
     onSnapshot(doc(db, "docs", pageId), async (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
-            currentPublicPageData = { id: docSnap.id, ...data };
+            state.currentPublicPageData = { id: docSnap.id, ...data };
             
             if (data.isPublic) {
                 document.getElementById("page-title").value = data.title || "";
