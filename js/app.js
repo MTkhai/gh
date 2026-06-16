@@ -20,7 +20,7 @@ import {
 } from "./search/search.js";
 
 import { state } from "./store/state.js";
-import { render, loadData,select,createNewPage } from "./pages/pages.js";
+import { render, loadData,select,createNewPage, deleteForever,restorePage } from "./pages/pages.js";
 // ================= 1. KHAI BÁO BIẾN TOÀN CỤC HỆ THỐNG =================
 
 
@@ -43,9 +43,8 @@ window.render = render;
 window.loadData = loadData;
 window.select = select;
 window.createNewPage = createNewPage;
-
-
-
+window.restorePage = restorePage;
+window.deleteForever = deleteForever;
 
 // ================= 2. ĐẬP CÁC HÀM GIAO DIỆN LÊN ĐẦU ĐỂ KHÔNG BỊ CHẶN LỖI =================
 window.openAuth = (type) => {
@@ -186,14 +185,7 @@ window.moveToTrash = async (id) => {
     }
 };
 
-window.restorePage = async (id) => {
-    await updateDoc(doc(db, "docs", id), { isDeleted: false, priority: "medium" });
-    window.select(id);
-};
 
-window.deleteForever = async (id) => {
-    if (confirm("Xóa vĩnh viễn trang này?")) await deleteDoc(doc(db, "docs", id));
-};
 
 
 // ================= 9. AUTO SAVE & SLASH MENU LỆNH NOTION =================
