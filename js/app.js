@@ -113,26 +113,26 @@ onAuthStateChanged(auth, (u) => {
     const sharedPageId = urlParams.get('page');
 
     if (u) {
-        user = u; landing.classList.add("hidden"); dash.classList.remove("hidden");
+        state.user = u; landing.classList.add("hidden"); dash.classList.remove("hidden");
         setTimeout(() => dash.classList.add("opacity-100"), 50);
         document.getElementById("user-display").innerText = `${u.email.split('@')[0]}'s Zotion`;
         loadData(u.uid);
     } else {
         if (sharedPageId) {
-            user = null; landing.classList.add("hidden"); dash.classList.remove("hidden");
+            state.user = null; landing.classList.add("hidden"); dash.classList.remove("hidden");
             setTimeout(() => dash.classList.add("opacity-100"), 50);
             document.getElementById("user-display").innerText = `Guest Mode 🌐`;
             document.querySelector("aside").classList.add("hidden");
             loadPublicPage(sharedPageId);
         } else {
-            user = null; landing.classList.remove("hidden"); dash.classList.add("hidden");
-            curId = null; pages = [];
+            state.user = null; landing.classList.remove("hidden"); dash.classList.add("hidden");
+            state.curId = null; state.pages = [];
         }
     }
 });
 
 async function loadPublicPage(pageId) {
-    curId = pageId;
+    state.curId = pageId;
     onSnapshot(doc(db, "docs", pageId), async (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
