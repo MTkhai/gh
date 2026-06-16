@@ -146,11 +146,3 @@ export const createNewPage = async () => {
     } catch (e) {}
 };
 
-export const restorePage = async (id) => {
-    await updateDoc(doc(db, "docs", id), { isDeleted: false, priority: "medium" });
-    window.select(id);
-};
-
-export const deleteForever = async (id) => {
-    if (confirm("Xóa vĩnh viễn trang này?")) await deleteDoc(doc(db, "docs", id));
-};

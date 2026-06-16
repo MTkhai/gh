@@ -20,7 +20,8 @@ import {
 } from "./search/search.js";
 
 import { state } from "./store/state.js";
-import { render, loadData,select,createNewPage, deleteForever,restorePage } from "./pages/pages.js";
+import { render, loadData,select,createNewPage} from "./pages/pages.js";
+import { moveToTrash, restorePage, deleteForever } from "./pages/trash.js";
 // ================= 1. KHAI BÁO BIẾN TOÀN CỤC HỆ THỐNG =================
 
 
@@ -45,6 +46,8 @@ window.select = select;
 window.createNewPage = createNewPage;
 window.restorePage = restorePage;
 window.deleteForever = deleteForever;
+window.moveToTrash = moveToTrash;
+
 
 // ================= 2. ĐẬP CÁC HÀM GIAO DIỆN LÊN ĐẦU ĐỂ KHÔNG BỊ CHẶN LỖI =================
 window.openAuth = (type) => {
@@ -171,19 +174,7 @@ async function loadPublicPage(pageId) {
 }
 
 
-window.moveToTrash = async (id) => {
-    await updateDoc(doc(db, "docs", id), { isDeleted: true, priority: "trash" });
-    if (curId === id) {
-        curId = null;
-        const active = pages.filter(p => !p.isDeleted && p.id !== id);
-        if (active.length > 0) window.select(active[0].id);
-        else {
-            document.getElementById("page-title").value = ""; 
-            document.getElementById("page-content").value = "";
-            document.getElementById("breadcrumb-title").innerText = "Untitled";
-        }
-    }
-};
+
 
 
 
